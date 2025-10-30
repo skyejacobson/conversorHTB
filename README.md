@@ -166,7 +166,7 @@ def view_file(file_id):
     return "File not found"
 ```
 
-This file gives us some clues as to where to go for next steps. We see the upload portion is XML and XSLT files which could contain RCE or Reverse shell capabilities. Further enumeration of the code there is a specific portion that catches attention in the `@app.route` function:
+This file gives us some clues as to where to go for next steps. We see the upload portion is XML and XSLT files which could contain RCE or Reverse shell capabilities. Further enumeration of the code there is a specific portion that catches attention in the `convert()` function:
 
 ```
 try:
@@ -189,4 +189,6 @@ try:
 except Exception as e:
     return f"Error: {e}"
 ```
+The `xml_tree` & `xslt_tree` variables call the `etree.parse()` function with the `xml_path` variable within its parameters. Parsing errors are incredibly common and can be huge vulnerabilities if improperly implemented. In our case it is exactly that; user-supplied XSLT is parsed and executed server side meaning arbitrary code put within an `.xml` or `.xslt` file could be used maliciously.
 
+In this case transformation output is written to the disk and served. When the result of the transform is served, it comes as a `.html` file. So anything the XSLT outputs becomes visible to whoever fetches that HTML. The attack vector falls under the same class as CVE-2025-6985. Read more here: CVE-2025-6985
