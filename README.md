@@ -191,4 +191,4 @@ except Exception as e:
 ```
 The `xml_tree` & `xslt_tree` variables call the `etree.parse()` function with the `xml_path` variable within its parameters. Parsing errors are incredibly common and can be huge vulnerabilities if improperly implemented. In our case it is exactly that; user-supplied XSLT is parsed and executed server side meaning arbitrary code put within an `.xml` or `.xslt` file could be used maliciously.
 
-In this case transformation output is written to the disk and served. When the result of the transform is served, it comes as a `.html` file. So anything the XSLT outputs becomes visible to whoever fetches that HTML. The attack vector falls under the same class as CVE-2025-6985. Read more here: CVE-2025-6985
+In this case transformation output is written to the disk and served. When the result of the transform is served, it comes as a `.html` file. So anything the XSLT outputs becomes visible to whoever fetches that HTML. The attack vector falls under the same class as CVE-2025-6985. Read more here: [CVE-2025-6985](https://nvd.nist.gov/vuln/detail/CVE-2025-6985)
