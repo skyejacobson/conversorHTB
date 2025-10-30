@@ -165,5 +165,28 @@ def view_file(file_id):
         return send_from_directory(UPLOAD_FOLDER, file['filename'])
     return "File not found"
 ```
-This file gives us some clues as to where to put next steps. Considering the upload portion is 
+
+This file gives us some clues as to where to go for next steps. We see the upload portion is XML and XSLT files which could contain RCE or Reverse shell capabilities. Further enumeration of the code there is a specific portion that catches attention in the `@app.route` function:
+
+```
+try:
+    parser = etree.XMLParser(resolve_entities=False, no_network=True, dtd_validation=False, load_dtd=False)
+    xml_tree = etree.parse(xml_path, parser)
+    xslt_tree = etree.parse(xslt_path)
+    transform = etree.XSLT(xslt_tree)
+    result_tree = transform(xml_tree)
+    result_html = str(result_tree)
+    file_id = str(uuid.uuid4())
+    filename = f"{file_id}.html"
+    html_path = os.path.join(UPLOAD_FOLDER, filename)
+    with open(html_path, "w") as f:
+        f.write(result_html)
+    conn = get_db()
+    conn.execute("INSERT INTO files (id,user_id,filename) VALUES (?,?,?)", (file_id, session['user_id'], filename))
+    conn.commit()
+    conn.close()
+    return redirect(url_for('index'))
+except Exception as e:
+    return f"Error: {e}"
+```
 
