@@ -1,2 +1,25 @@
 # converserHTB
 Writeup of the Converser seasonal HTB machine
+
+
+## Intial NMAP scan and analysis of the machine brings up 2 seperate POA including SSH and a webserver hosted on 80
+  nmap -sV -sC 10.10.11.92 
+    Starting Nmap 7.95 ( https://nmap.org ) at 2025-10-30 12:30 CDT
+    Nmap scan report for conversor.htb (10.10.11.92)
+    Host is up (0.027s latency).
+    Not shown: 998 closed tcp ports (reset)
+    PORT   STATE SERVICE VERSION
+    22/tcp open  ssh     OpenSSH 8.9p1 Ubuntu 3ubuntu0.13 (Ubuntu Linux; protocol 2.0)
+    | ssh-hostkey: 
+    |   256 01:74:26:39:47:bc:6a:e2:cb:12:8b:71:84:9c:f8:5a (ECDSA)
+    |_  256 3a:16:90:dc:74:d8:e3:c4:51:36:e2:08:06:26:17:ee (ED25519)
+    80/tcp open  http    Apache httpd 2.4.52
+    | http-title: Login
+    |_Requested resource was /login
+    |_http-server-header: Apache/2.4.52 (Ubuntu)
+    Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernel
+    
+    Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
+    Nmap done: 1 IP address (1 host up) scanned in 9.21 seconds
+
+##
