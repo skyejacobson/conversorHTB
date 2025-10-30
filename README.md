@@ -2,7 +2,7 @@
 Writeup of the Converser seasonal HTB machine. This machine involes XML/XSLT parsing bug or CVE-2025-6985 
 
 
-### Intial NMAP scan and analysis of the machine brings up 2 seperate PoA including SSH and a webserver hosted on 80
+Intial NMAP scan and analysis of the machine brings up 2 seperate PoA including SSH and a webserver hosted on 80
 ```
 nmap -sV -sC 10.10.11.92
 ```
@@ -25,7 +25,9 @@ Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernel
 Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
 Nmap done: 1 IP address (1 host up) scanned in 9.21 seconds
 ```
-### After creating an account and installing the source_code tarball we can see a few files and subdirectories most of which are useless besides one `app.py`
+
+After creating an account and installing the source_code tarball we can see a few files and subdirectories most of which are useless besides one `app.py`
+
 ```
 ┌──(root㉿kali)-[/home/kali/Downloads/source_code]
 └─# cat app.py
