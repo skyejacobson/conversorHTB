@@ -3,6 +3,7 @@ Writeup of the Converser seasonal HTB machine
 
 
 ## Intial NMAP scan and analysis of the machine brings up 2 seperate POA including SSH and a webserver hosted on 80
+'''
   nmap -sV -sC 10.10.11.92 
     Starting Nmap 7.95 ( https://nmap.org ) at 2025-10-30 12:30 CDT
     Nmap scan report for conversor.htb (10.10.11.92)
@@ -21,5 +22,5 @@ Writeup of the Converser seasonal HTB machine
     
     Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
     Nmap done: 1 IP address (1 host up) scanned in 9.21 seconds
-
+'''
 ##
