@@ -1,7 +1,7 @@
 # ConverserHTB
 Writeup of the Converser seasonal HTB machine. 
 
-**replace all formatting with <text here> in the files**
+**replace all formatting with `<attacker ip>` in the files**
 
 Intial NMAP scan and analysis of the machine brings up 2 seperate PoA including SSH and a webserver hosted on 80
 ```
