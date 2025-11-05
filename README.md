@@ -1,7 +1,7 @@
 # ConverserHTB
 Writeup of the Converser seasonal HTB machine. 
 
-**replace all formatting with `<attacker ip>` in the files**
+**Replace all formatting with `<attacker ip>` in the files**
 
 Intial NMAP scan and analysis of the machine brings up 2 seperate PoA including SSH and a webserver hosted on 80
 ```
@@ -249,7 +249,7 @@ This version of EXSLT supports 2 seperate namespaces of exporting text to an upl
 
 Either one of these would work assuming that the `install.md` file is correct in saying the `www-data` user has write permissions to the `/var/../../scripts` directory.
 
-Before uploading our our `.xml` and `.xslt` files we need to establish a way for the files to pull our shell.sh file from our attacker machine. We need to setup a python http server and a nc listener on our attacker machine and then upload our arbitrary files. After doing so and waiting 60 seconds we can see it works.
+Before uploading our our `.xml` and `.xslt` files we need to establish a way for the files to pull our shell.sh file from our attacker machine. We need to setup a python http server and a nc listener on our attacker machine and then upload our arbitrary files. After doing so we wait 60 seconds for the cron job to refresh.
 
 ```
 ┌──(root㉿kali)-[/]
@@ -268,4 +268,4 @@ www-data@conversor:~$
 
 ```
 
-
+Success. The server actively took our XLST file 
