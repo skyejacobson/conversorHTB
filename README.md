@@ -268,4 +268,10 @@ www-data@conversor:~$
 
 ```
 
-Success. The server actively took our XLST file 
+Success. The server actively takes our XLST file, builds it in the scripts directory and places it into the cron job to execute our reverse shell. 
+
+The connection specifies `bash: no job control in this shell`. It's highly reccomended to increase the job control in the shell to avoid an accidental disconnect: Read here how to do that [How to Upgrade a DUMB shell](https://systemweakness.com/how-to-upgrade-a-dumb-shell-64ea9880f556)
+
+
+
+
