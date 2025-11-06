@@ -272,6 +272,20 @@ Success. The server actively takes our XLST file, builds it in the scripts direc
 
 The connection specifies `bash: no job control in this shell`. It's highly reccomended to increase the job control in the shell to avoid an accidental disconnect: Read here how to do that [How to Upgrade a DUMB shell](https://systemweakness.com/how-to-upgrade-a-dumb-shell-64ea9880f556)
 
+With access to the server we need find privilege escalation. Specifically in the `app.py` file in the first few lines tell us where to look. 
 
+```
+DB_PATH = '/var/www/conversor.htb/instance/users.db'
+```
 
+Taking a look at the permissions of the file, user `www-data` has Read Write Execute permissions.
+
+```
+www-data@conversor:~/conversor.htb/instance$ ls -l
+ls -l
+total 24
+-rwxr-x--- 1 www-data www-data 24576 Oct 31 15:49 users.db
+```
+
+We can use sqlite3 to navigate within this database to see if any information was left behind. 
 
