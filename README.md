@@ -289,3 +289,23 @@ total 24
 
 We can use sqlite3 to navigate within this database to see if any information was left behind. 
 
+```
+www-data@conversor:~/conversor.htb/instance$ sqlite3 users.db
+sqlite3 users.db
+SQLite version 3.37.2 2022-01-06 13:25:41
+Enter ".help" for usage hints.
+sqlite> .tables
+.tables
+files  users
+
+sqlite> SELECT * FROM users
+SELECT * FROM users;
+
+1|fismathack|5b5c3ac3a1c897c94caad48e6c71fdec
+5|test|5f4dcc3b5aa765d61d8327deb882cf99
+6|sam|332532dcfaa1cbf61e2a266bd723612c
+7|root|5f4dcc3b5aa765d61d8327deb882cf99
+8|tester123|098f6bcd4621d373cade4e832627b4f6
+9|1234|81dc9bdb52d04dc20036dbd8313ed055
+```
+
