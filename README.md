@@ -324,3 +324,72 @@ After correctly identifying the hash we can use hash cat to attempt to crack it,
 5b5c3ac3a1c897c94caad48e6c71fdec:(passwordwillbehere)
 ```
 
+Because the machine in the initial nmap scan specified ssh we can use this password to attempt to intialize a connection with the server.
+
+```
+──(root㉿kali)-[/]
+└─# ssh fismathack@10.10.11.92
+fismathack@10.10.11.92's password: 
+Welcome to Ubuntu 22.04.5 LTS (GNU/Linux 5.15.0-160-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com
+ * Management:     https://landscape.canonical.com
+ * Support:        https://ubuntu.com/pro
+
+ System information as of Fri Oct 31 04:31:11 PM UTC 2025
+
+  System load:  1.0               Processes:             287
+  Usage of /:   79.0% of 5.78GB   Users logged in:       0
+  Memory usage: 19%               IPv4 address for eth0: 10.10.11.92
+  Swap usage:   0%
+
+
+Expanded Security Maintenance for Applications is not enabled.
+
+0 updates can be applied immediately.
+
+Enable ESM Apps to receive additional future security updates.
+See https://ubuntu.com/esm or run: sudo pro status
+
+
+The list of available updates is more than a week old.
+To check for new updates run: sudo apt update
+
+
+The programs included with the Ubuntu system are free software;
+the exact distribution terms for each program are described in the
+individual files in /usr/share/doc/*/copyright.
+
+Ubuntu comes with ABSOLUTELY NO WARRANTY, to the extent permitted by
+applicable law.
+
+Last login: Fri Oct 31 16:31:12 2025 from <attacker ip>
+fismathack@conversor:~$ 
+```
+
+The user flag is located in the home directory.
+
+With a successful connection we can now further enumerate permissions to get root level execution.
+
+```
+fismathack@conversor:~$ sudo -l
+Matching Defaults entries for fismathack on conversor:
+    env_reset, mail_badpass,
+    secure_path=/usr/local/sbin\:/usr/local/bin\:/usr/sbin\:/usr/bin\:/sbin\:/bin\:/snap/bin,
+    use_pty
+
+User fismathack may run the following commands on conversor:
+    (ALL : ALL) NOPASSWD: /usr/sbin/needrestart
+```
+
+`needrestart` is a linux community tool that allows users and admins to perform restart on utilities after library, service, or dependency updates. Read more here [NeedRestart Utility](https://discourse.ubuntu.com/t/needrestart-for-servers/21552)
+
+`needrestart` has a known security flaw with its use of the `PYTHONPATH` environment variable, allowing local attackers to execute arbitrary code to gain root access as it incorrectly santizes it when determining which python services need restarting. Read more here [CVE-2024-48990-48992](https://www.qualys.com/2024/11/19/needrestart/needrestart.txt)
+
+We can check software version to see if this is exploitable.
+
+```
+fismathack@conversor:~$ /usr/sbin/needrestart -v
+[main] needrestart v3.7
+```
+
