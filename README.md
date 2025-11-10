@@ -384,7 +384,7 @@ User fismathack may run the following commands on conversor:
 
 `needrestart` is a linux community tool that allows users and admins to perform restart on utilities after library, service, or dependency updates. Read more here [NeedRestart Utility](https://discourse.ubuntu.com/t/needrestart-for-servers/21552)
 
-`needrestart` has a known security flaw with its use of the `PYTHONPATH` environment variable, allowing local attackers to execute arbitrary code to gain root access as it incorrectly santizes it when determining which python services need restarting. Read more here [CVE-2024-48990-48992](https://www.qualys.com/2024/11/19/needrestart/needrestart.txt)
+`needrestart` has a known security flaw versions 2.3 - 3.7 with its use of the `PYTHONPATH` environment variable, allowing local attackers to execute arbitrary code to gain root access as it incorrectly santizes it when determining which python services need restarting. Read more here [CVE-2024-48990-48992](https://www.qualys.com/2024/11/19/needrestart/needrestart.txt)
 
 We can check software version to see if this is exploitable.
 
