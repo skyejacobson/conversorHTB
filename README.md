@@ -393,3 +393,6 @@ fismathack@conversor:~$ /usr/sbin/needrestart -v
 [main] needrestart v3.7
 ```
 
+Since its exploitable, we can craft an exploit for this machine. These articles help get an understanding how how to start. [Qualy's](https://www.qualys.com/2024/11/19/needrestart/needrestart.txt) [LinuxSecurity](https://linuxsecurity.com/news/security-vulnerabilities/linux-needrestart-utility-flaws-allow-root-access) [ally-petitt](https://github.com/ally-petitt/CVE-2024-48990-Exploit/blob/main/README.md)
+
+The `lib.c` file is a malicious shared library payload. It’s written so a function runs automatically when the library is loaded; if that function finds it’s running as root it drops a copy of a root shell into `/tmp` makes that copy SUID so it runs with root privileges leading to easy way for anyone with access to the machine to gain root.
