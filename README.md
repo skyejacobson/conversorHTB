@@ -1,5 +1,5 @@
-# ConverserHTB
-Writeup of the Converser seasonal HTB machine. 
+# ConversorHTB
+Writeup of the Conversor seasonal HTB machine. 
 
 **Replace all formatting with `<attacker ip>` in the files**
 
