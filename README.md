@@ -211,7 +211,7 @@ First steps is to build the shell script, XML dummy file, and Python & XLST RCE 
 
 I wont go into why and what makes this vulnerability work, if you want to read more check out this great analysis on the CVE. [Splunk and EXSLT CVE](https://www.uptycs.com/blog/threat-research-report-team/splunk-vulnerability-cve-2023-46214)
 
-In order to make it the most effecient we combine processes into one singular upload.
+In order to make it the most efficient we combine processes into one singular upload.
 
 ```
 <?xml version="1.0" encoding="UTF-8"?>
