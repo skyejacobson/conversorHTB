@@ -169,7 +169,7 @@ def view_file(file_id):
     return "File not found"
 ```
 
-This file gives us some clues as to where to go for next steps. We see the upload portion is XML and XSLT files which could contain RCE or Reverse shell capabilities. Further enumeration of the code there is a specific portion that catches attention in the `convert()` function:
+This file gives us some clues as to where to go for next steps. We see the upload portion is XML and XSLT files which could contain RCE or Reverse shell capabilities. Further enumeration of the code shows there is a specific portion that catches attention in the `convert()` function:
 
 ```
 try:
@@ -192,7 +192,7 @@ try:
 except Exception as e:
     return f"Error: {e}"
 ```
-The `xml_tree` & `xslt_tree` variables call the `etree.parse()` function with the `xml_path` variable within its parameters. Parsing errors are incredibly common and can be huge vulnerabilities if improperly implemented. In our case it is exactly that; user-supplied XSLT is parsed and executed server side meaning arbitrary code put within an `.xml` or `.xslt` file could be used maliciously.
+The `xml_tree` & `xslt_tree` variables call the `etree.parse()` function with the `xml_path` variable within its parameters. Parsing errors are incredibly common and can be huge vulnerabilities if improperly implemented. In our case it is exactly that; user-supplied XSLT is parsed and executed server-side meaning arbitrary code put within an `.xml` or `.xslt` file could be used maliciously.
 
 In this case transformation output is written to the disk and served. When the result of the transform is served, it comes as a `.html` file. So anything the XSLT outputs becomes visible to whoever fetches that HTML. The intutive route, from further research, points us to utilizing CVE-2023-46214. Both these attack vectors take advantage of CVE-2025-6985 and CVE-2023-46214. Read more here: [CVE-2025-6985](https://nvd.nist.gov/vuln/detail/CVE-2025-6985) [CVE-2023-46214](https://nvd.nist.gov/vuln/detail/cve-2023-46214)
 
@@ -203,7 +203,7 @@ If you want to run Python scripts (for example, our server deletes all files old
 ***** www-data for f in /var/www/conversor.htb/scripts/*.py; do python3 "$f" ""
 ```
 
-This is our way in. The file tells us that its executing a **cron job**. Read more here: [Cron Kubernetes](https://kubernetes.io/docs/concepts/workloads/controllers/cron-jobs/). Its specifying that it runs as `www-data`, executing any `.py` file within the `/var/www/conversor.htb/scripts/` directory on the server, particularily every 60 seconds.
+This is our way in. The file tells us that its executing a **cron job**. Read more here: [Cron Kubernetes](https://kubernetes.io/docs/concepts/workloads/controllers/cron-jobs/). Its specifying that it runs as `www-data`, executing any `.py` file within the `/var/www/conversor.htb/scripts/` directory on the server, particularly every 60 seconds.
 
 We use this to our advantage. Since the user portal allows us to upload `.xml` and `.xlst` files, executing them respectfully thanks to the parsing error, we can find a way to RCE a python file to the `/scripts` directory and maintain a reverse shell.
 
@@ -249,7 +249,7 @@ This version of EXSLT supports 2 separate namespaces of exporting text to an upl
 
 Either one of these would work assuming that the `install.md` file is correct in saying the `www-data` user has write permissions to the `/var/../../scripts` directory.
 
-Before uploading our our `.xml` and `.xslt` files we need to establish a way for the files to pull our shell.sh file from our attacker machine. We need to setup a python http server and a nc listener on our attacker machine and then upload our arbitrary files. After doing so we wait 60 seconds for the cron job to refresh.
+Before uploading our our `.xml` and `.xslt` files we need to establish a way for the files to pull our `shell.sh` file from our attacker machine. We need to setup a python http server and a nc listener on our attacker machine and then upload our arbitrary files. After doing so we wait 60 seconds for the cron job to refresh.
 
 ```
 ┌──(root㉿kali)-[/]
@@ -268,7 +268,7 @@ www-data@conversor:~$
 
 ```
 
-Success. The server actively takes our XLST file, builds it in the scripts directory and places it into the cron job to execute our reverse shell. 
+Success. The server actively takes our XSLT file, builds it in the scripts directory and places it into the cron job to execute our reverse shell. 
 
 The connection specifies `bash: no job control in this shell`. It's highly reccomended to increase the job control in the shell to avoid an accidental disconnect: Read here how to do that [How to Upgrade a DUMB shell](https://systemweakness.com/how-to-upgrade-a-dumb-shell-64ea9880f556)
 
@@ -384,7 +384,7 @@ User fismathack may run the following commands on conversor:
 
 `needrestart` is a linux community tool that allows users and admins to perform restart on utilities after library, service, or dependency updates. Read more here [NeedRestart Utility](https://discourse.ubuntu.com/t/needrestart-for-servers/21552)
 
-`needrestart` has a known security flaw versions 2.3 - 3.7 with its use of the `PYTHONPATH` environment variable, allowing local attackers to execute arbitrary code to gain root access as it incorrectly santizes it when determining which python services need restarting. Read more here [CVE-2024-48990-48992](https://www.qualys.com/2024/11/19/needrestart/needrestart.txt)
+`needrestart` has a known security flaw in versions 2.3 - 3.7 with its use of the `PYTHONPATH` environment variable, allowing local attackers to execute arbitrary code to gain root access as it incorrectly santizes it when determining which python services need restarting. Read more here [CVE-2024-48990-48992](https://www.qualys.com/2024/11/19/needrestart/needrestart.txt)
 
 We can check software version to see if this is exploitable.
 
@@ -393,13 +393,13 @@ fismathack@conversor:~$ /usr/sbin/needrestart -v
 [main] needrestart v3.7
 ```
 
-Since its exploitable, we can craft an exploit for this machine. These articles help get an understanding how how to start. [Qualy's](https://www.qualys.com/2024/11/19/needrestart/needrestart.txt) [LinuxSecurity](https://linuxsecurity.com/news/security-vulnerabilities/linux-needrestart-utility-flaws-allow-root-access) [ally-petitt](https://github.com/ally-petitt/CVE-2024-48990-Exploit/blob/main/README.md)
+Since its exploitable, we can craft an exploit for this machine. These articles help get an understanding of how to start. [Qualy's](https://www.qualys.com/2024/11/19/needrestart/needrestart.txt) [LinuxSecurity](https://linuxsecurity.com/news/security-vulnerabilities/linux-needrestart-utility-flaws-allow-root-access) [ally-petitt](https://github.com/ally-petitt/CVE-2024-48990-Exploit/blob/main/README.md)
 
 The `lib.c` file is a malicious pre-compiled `.so` payload. It’s written so the function runs automatically when the library is loaded; if the function finds it’s running as root, it drops a copy of a root shell into `/tmp`.
 
 The second part to the exploit is creating some autonomy. Creating the `autoRun.sh` is optional but makes the execution simpler. 
 
-Before that we need to compile the `lib.c` file into a shared library (`.so`) file. 
+Before that, we need to compile the `lib.c` file into a shared library (`.so`) file. 
 
 ```
 ┌──(root㉿kali)-[/]
